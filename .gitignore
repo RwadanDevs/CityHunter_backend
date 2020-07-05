@@ -9,6 +9,9 @@ bin-release/
 .env
 node_modules
 request.rest 
+package-lock.json
+coverage
+.nyc_output
 
 # Executables
 *.swf
