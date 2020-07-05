@@ -6,7 +6,7 @@ import { authorizationCheck,VerifyToken } from '../../../middleware/authorizatio
 
 const route = express.Router();
 
-route.get('/auth/token/:token',VerifyToken,userController.SocialAuth)
+route.get('/auth/token/:token', VerifyToken, userController.SocialAuth)
 
 route.post('/auth/user',userController.SocialAuth)
 

@@ -1,7 +1,12 @@
 import dotenv from 'dotenv';
 import Util from '../helpers/util';
 import userService from '../services/userService';
-import { roleUpdateValidateSchema } from '../helpers/validationSchema';
+import { 
+  roleUpdateValidateSchema, 
+  routeUpdateValidateSchema, 
+  routeValidateSchema,
+  stopValidateSchema
+} from '../helpers/validationSchema';
 
 const util = new Util();
 
@@ -44,6 +49,44 @@ export default class validators {
           util.setError(400, Error);
           return util.send(res);
          }
+        return next();
+    }
+
+    static async RouteValidator(req, res, next) {
+      const { PointA,PointB } = req.body; 
+       const { error } = routeValidateSchema.validate({ PointA,PointB });
+    
+        if ( error ) {
+          const Error = error.details[0].message.replace('/', '').replace(/"/g, '');
+          util.setError(400, Error);
+          return util.send(res);
+        }
+        
+        return next();
+    }
+
+    static async RouteUpdateValidator(req, res, next) {
+      const { PointA,PointB,status } = req.body; 
+       const { error } = routeUpdateValidateSchema.validate({ PointA,PointB,status });
+    
+        if ( error ) {
+          const Error = error.details[0].message.replace('/', '').replace(/"/g, '');
+          util.setError(400, Error);
+          return util.send(res);
+        }
+        
+        return next();
+    }
+
+    static async StopValidator(req, res, next) {
+       const { error } = stopValidateSchema.validate(req.body);
+    
+        if ( error ) {
+          const Error = error.details[0].message.replace('/', '').replace(/"/g, '');
+          util.setError(400, Error);
+          return util.send(res);
+        }
+        
         return next();
     }
 }

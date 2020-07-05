@@ -24,11 +24,10 @@ describe('>>> Testing Route (User Auth) <<<',()=>{
         chai
       .request(app)
       .get('/')
-      .send(User[0])
       .end((err, res) => {
         expect(res.statusCode).to.equal(200);
-        done();
       });
+      done();
     })
 
     it('Route NotFound',(done)=>{
