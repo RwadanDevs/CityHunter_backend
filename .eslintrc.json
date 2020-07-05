@@ -32,21 +32,22 @@
         "requireReturnDescription": true
       }
     ],
-    "require-jsdoc": [
-      "error",
-      {
-        "require": {
-          "FunctionDeclaration": false,
-          "MethodDefinition": false,
-          "ClassDeclaration": false
+
+      "require-jsdoc": [
+        "error",
+        {
+          "require": {
+            "FunctionDeclaration": false,
+            "MethodDefinition": false,
+            "ClassDeclaration": false
+          }
         }
-      }
-    ],
-    "import/no-cycle": 0,
-    "no-unused-vars": "warn",
-    "no-console": "off",
-    "prefer-destructuring": "warn",
-    "prefer-const": "warn",
-    "import/prefer-default-export": 0
+      ],
+      "import/no-cycle": 0,
+      "no-unused-vars": "warn",
+      "no-console": "off",
+      "prefer-destructuring": "warn",
+      "prefer-const": "warn",
+      "import/prefer-default-export": 0
+    }
   }
-}
