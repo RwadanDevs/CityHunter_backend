@@ -5,11 +5,19 @@ export default (sequelize, DataTypes) => {
       primaryKey: true,
       allowNull:false
     },
+    routeNumber:{
+      type: DataTypes.INTEGER,
+      allowNull:false,
+    },
     PointA: {
       type: DataTypes.STRING,
       allowNull:false,
     },
     PointB: {
+      type: DataTypes.STRING,
+      allowNull:false,
+    },
+    company: {
       type: DataTypes.STRING,
       allowNull:false,
     },
@@ -20,12 +28,20 @@ export default (sequelize, DataTypes) => {
     },
   }, {});
   routes.associate = function(models) {
-    routes.hasMany(models.stops,{
-      foreignKey:'route_id',
+    routes.hasMany(models.routeNumbers,{
+      foreignKey:'routeNumber',
       as: 'routeStop',
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     })
+
+    routes.hasMany(models.busses,{
+      foreignKey:'routeNumber',
+      as: 'busRoute',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    })
+    
   };
   return routes;
 };

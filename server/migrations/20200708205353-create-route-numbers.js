@@ -1,21 +1,18 @@
 export function up(queryInterface, Sequelize) {
-  return queryInterface.createTable('stops', {
+  return queryInterface.createTable('routeNumbers', {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
       },
-      name: {
-        type: Sequelize.STRING,
+      stop_id: {
+        type: Sequelize.UUID,
         allowNull:false,
       },
-      longitude:{
-        type:Sequelize.FLOAT,
-        allowNull: false,
-      },
-      latitude:{
-        type:Sequelize.FLOAT,
-        allowNull: false,
+      routeNumber: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
       },
       createdAt: {
         allowNull: false,
@@ -28,5 +25,5 @@ export function up(queryInterface, Sequelize) {
     });
   }
 export function down(queryInterface) {
-  return queryInterface.dropTable('stops');
+  return queryInterface.dropTable('routeNumbers');
 }

@@ -24,12 +24,12 @@ route.patch(
         '/routes/:route_id', 
         authorizationCheck, 
         allow('Manager'),
-        validator.RouteUpdateValidator,
+        validator.RouteValidator,
         routeController.updateAroute,
     )
   
 route.post( 
-        '/stops/:route_id', 
+        '/stops', 
         authorizationCheck, 
         allow('Manager'),
         validator.StopValidator,
@@ -40,7 +40,7 @@ route.patch(
         '/stops/:stop_id', 
         authorizationCheck, 
         allow('Manager'),
-        validator.StopValidator,
+        validator.StopUpdateValidator,
         routeController.updateAstop,
     )
 

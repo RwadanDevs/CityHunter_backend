@@ -1,6 +1,7 @@
 import express from 'express';
 import userRoutes from './api/user/auth';
-import BusRoutes from './api/route/route';
+import travelRoutes from './api/route/route';
+import busses from './api/bus/bus';
 import Util from '../helpers/util';
 
 const util = new Util();
@@ -8,14 +9,8 @@ const route = express.Router()
 
 route.use('/',userRoutes)
 
-route.use('/',BusRoutes)
+route.use('/',travelRoutes)
 
-route.use((req, res) =>
-  res.status(404).json({
-    status: 404,
-    error: ' PAGE NOT FOUND ',
-  })
-);
+route.use('/',busses)
 
 export default route;
-

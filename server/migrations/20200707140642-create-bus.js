@@ -1,25 +1,30 @@
 export function up(queryInterface, Sequelize) {
-  return queryInterface.createTable('routes', {
+  return queryInterface.createTable('busses', {
       id: {
         allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.UUID,
+        type: Sequelize.INTEGER,
+      },
+      origin: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      destination: {
+        type: Sequelize.STRING,
+        allowNull: true,
       },
       routeNumber: {
         type: Sequelize.INTEGER,
-        allowNull:false,
+        allowNull: true,
       },
-      PointA: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      PointB: {
+      plateNumber: {
         type: Sequelize.STRING,
         allowNull: false,
       },
       company: {
         type: Sequelize.STRING,
-        allowNull:false,
+        allowNull: false,
       },
       status: {
         type: Sequelize.STRING,
@@ -35,5 +40,5 @@ export function up(queryInterface, Sequelize) {
     });
   }
 export function down(queryInterface) {
-  return queryInterface.dropTable('routes');
+  return queryInterface.dropTable('busses');
 }

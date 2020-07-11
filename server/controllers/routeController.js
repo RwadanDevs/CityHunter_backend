@@ -2,10 +2,11 @@ import { v4 as uuidv4 } from 'uuid';
 import Util from '../helpers/util';
 import routeService from '../services/routeService';
 import stopService from '../services/stopService';
+import routeNumberService from '../services/rNumberService';
 
 const util = new Util();
  
-export default class User {
+export default class Route {
     static async AllRoute(req,res){
         const routes = await routeService.getAllRoutes();
 
@@ -31,22 +32,25 @@ export default class User {
             return util.send(res)
         }
 
-        let stops = await stopService.findByProp({ route_id })
+        let stops = await routeNumberService.findByProp({ routeNumber : route.dataValues.routeNumber })
 
         if(!stops[0]){
-            stops = [{ dataValues:'No Bus Stops Yet' }];
             await routeService.updateAtt({ status:'dormant' },{ id:route_id }) 
         }
-
-        const data  = await stops.map(stop=>stop.dataValues)
+        const data  = [];
+        for(const stop of stops){
+            const exist  = await stopService.findById(stop.dataValues.stop_id)
+            if(exist)
+            data.push(exist.dataValues)
+        }
 
         util.setSuccess(200,'Fetch Successful',{route: route.dataValues,stops: data})
         return util.send(res)
     }
 
     static async SpecificStop(req,res){
-        const { role } = req.userData;
         const { stop_id } = req.params;
+        let routes;
 
         const stop = await stopService.findById(stop_id)
 
@@ -55,44 +59,44 @@ export default class User {
             return util.send(res)
         }
 
-        const route = await routeService.findById(stop.dataValues.route_id)
+        routes = await routeNumberService.findByProp({ stop_id })
 
-        if(role === 'requester' && route.dataValues.status !== 'active'){
-            util.setError(403,'Route Out of Service')
-            return util.send(res)
-        }
-
-        util.setSuccess(200,'Fetch Successful',stop.dataValues)
+        util.setSuccess(200,'Fetch Successful',{ stop: stop.dataValues,routes })
         return util.send(res)
     }
 
     static async createAroute(req,res){
-        const { PointA,PointB } = req.body;
+        const { PointA,PointB,routeNumber } = req.body;
         const uuid  = uuidv4();
-        const similars = await routeService.findByProp({ PointA: PointA.toUpperCase() })
+        
+        const route = await routeService.findByRouteNumber( routeNumber )
 
-        if(similars[0]){
-            const exist = similars.find(route => route.dataValues.PointB.toUpperCase() === PointB.toUpperCase() )
-            if(exist){
-                util.setError(409,'Route already Exits')
-                return util.send(res)
+        if(route){
+            const Error = {
+                error: `Route Number ${routeNumber} already Taken`,
+                tip: 'choose another Route number',
             }
+            util.setError(409,Error)
+            return util.send(res)
         }
-
+        
         const newRoute =  {
             id:uuid,
-            PointA: PointA.toUpperCase(),
-            PointB: PointB.toUpperCase(),
-        }
+            PointA,
+            PointB,
+            ...req.body,
+        };
+
         await routeService.createRoute(newRoute) 
         
-        util.setSuccess(201,`Route ${PointA}-${PointB} created successfully`,newRoute)
+        util.setSuccess(201,`Route ${PointA} -- ${PointB} created successfully`,newRoute)
         return util.send(res)
     }
 
     static async updateAroute(req,res){
-        const { PointA,PointB,status } = req.body;
+        const { routeNumber } = req.body;
         const { route_id } = req.params;
+
         const exist = await routeService.findById(route_id)
 
         if(!exist){
@@ -100,49 +104,50 @@ export default class User {
             return util.send(res)
         }
 
-        const newRoute =  { PointA,PointB,status }
-
-        const route =  await routeService.updateAtt(newRoute,{ id:route_id }) 
+        const route = await routeService.findByRouteNumber( routeNumber )
         
-        util.setSuccess(200,`Route ${PointA}-${PointB} updated successfully`,route.dataValues)
+        if(route && route.dataValues.id !== route_id){
+            const Error = {
+                error: `Route Number ${routeNumber} already Taken`,
+                tip: 'choose another Route number',
+            }
+            util.setError(409,Error)
+            return util.send(res)
+        }
+
+        const data =  await routeService.updateAtt(req.body,{ id:route_id }) 
+        
+        util.setSuccess(200,`Route updated successfully`,data.dataValues)
         return util.send(res)
     }
 
     static async createAstop(req,res){
-        const { longitude,latitude,name } = req.body;
-        const { route_id } = req.params;
+        const { longitude,latitude,name,routeNumbers } = req.body;
         const uuid  = uuidv4();
-
-        const exist = await routeService.findById(route_id)
-
-        if(!exist){
-            util.setError(404,'Route NotFound')
-            return util.send(res)
-        }
 
         const similars = await stopService.findByProp({ longitude })
 
         if(similars[0]){
             const exist = similars.find(route => route.dataValues.latitude === JSON.parse(latitude))
             if(exist){
-                util.setError(409,'Route already Exits')
+                util.setError(409,'Stop already Exits')
                 return util.send(res)
             }
         }
 
-        const names =  await stopService.findByProp({ name: name.toUpperCase() })
-        
-        if(names[0]){
-            util.setError(409,'Name already taken')
-            return util.send(res)
+        for(const routeNumber of routeNumbers){
+            const newRouteNumberStop = {
+                stop_id:uuid,
+                routeNumber,
+            }
+            await routeNumberService.createRouteStop(newRouteNumberStop)
         }
-
+        
         const newStop =  {
             id:uuid,
             latitude,
             longitude,
-            name: name.toUpperCase(),
-            route_id,
+            name,
         }
 
         await stopService.createStop(newStop) 
@@ -152,13 +157,15 @@ export default class User {
     }
 
     static async updateAstop(req,res){
-        const { longitude,latitude,name } = req.body;
+        const { longitude,latitude,name,routeNumbers } = req.body;
         const { stop_id } = req.params;
-        const exist = await stopService.findById(stop_id)
 
-        if(!exist){
-            util.setError(404,'Stop NotFound')
-            return util.send(res)
+        for(const routeNumber of routeNumbers){
+            const newRouteNumberStop = {
+                stop_id,
+                routeNumber
+            }
+            await routeNumberService.createRouteStop(newRouteNumberStop)
         }
 
         const newStop =  {
