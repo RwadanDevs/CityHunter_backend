@@ -22,10 +22,10 @@ export default class routeServices {
     static getAllRoutes() {
       return routes.findAll();
     }
-
-    static findByProp(prop) {
-        return routes.findAll({
-          where: prop,
+    
+    static findByRouteNumber(prop) {
+      return routes.findOne({
+          where: { routeNumber: prop },
         });
     }
 }

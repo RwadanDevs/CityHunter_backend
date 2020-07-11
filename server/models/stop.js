@@ -9,10 +9,6 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull:false,
     },
-    route_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-    },
     longitude:{
       type: DataTypes.FLOAT,
       allowNull: false,
@@ -23,7 +19,12 @@ export default (sequelize, DataTypes) => {
     },
   }, {});
   stops.associate = function(models) {
-    stops.belongsTo(models.users ,{ foreignKey:'route_id',targetKey:'id' })
+    stops.hasMany(models.routeNumbers,{
+      foreignKey:'stop_id',
+      as: 'routeStop',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    })
   };
   return stops;
 };

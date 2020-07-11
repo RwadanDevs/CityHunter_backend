@@ -1,6 +1,6 @@
 import http from 'http';
 import app from './app';
-import socket from 'socket.io';
+import { startSocket } from './helpers/sockets';
 
  const server = http.createServer(app);
 
@@ -8,4 +8,4 @@ import socket from 'socket.io';
 
  const listener = server.listen(port,()=>console.log(`running port ${port}`))
 
- const io = socket(listener)
+ startSocket(server);

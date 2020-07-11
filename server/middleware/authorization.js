@@ -23,18 +23,18 @@ export const authorizationCheck = async (req, res, next) => {
   };
 
 export const VerifyToken = async (req,res,next) => {
-    try{
-      const { token } = req.params;
+  try{
+    const { token } = req.params;
 
-      const getInfo = jwt.verify(token, process.env.JWT_KEY);
+    const getInfo = jwt.verify(token, process.env.JWT_KEY);
 
-      const userRecord = await userService.findByEmail({ email : getInfo.email });
+    const userRecord = await userService.findByEmail({ email : getInfo.email });
 
-      req.body = {...userRecord.dataValues};
-      return next()
-    } catch (error) {
-      const Error = 'No token provided or Token expired';
-      util.setError(401, Error);
-      return util.send(res);
-    }
+    req.body = {...userRecord.dataValues};
+    return next()
+  } catch (error) {
+    const Error = 'No token provided or Token expired';
+    util.setError(401, Error);
+    return util.send(res);
   }
+}

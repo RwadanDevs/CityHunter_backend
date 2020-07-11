@@ -8,15 +8,18 @@ const { expect } = chai;
 
 dotenv.config()
 
-const User = [{
-  email: "firaduk@ygmail.com",
-  firstname: "kazitunga",
-  lastname: "Dativa",
-  googleId:32723098641678272,
-  facebookId:"",
-},{
-    email: process.env.Super_Admin_Email,
-}]
+const User = [
+    {
+    email: "firaduk@ygmail.com",
+    firstname: "kazitunga",
+    lastname: "Dativa",
+    googleId:32723098641678272,
+    facebookId:"",
+    },
+    {
+      email: process.env.Super_Admin_Email,
+    },
+  ]
 
 describe('>>> Testing Route (User Auth) <<<',()=>{
   let AdminToken,UserToken
@@ -79,7 +82,7 @@ describe('>>> Testing Route (User Auth) <<<',()=>{
     it('User Token Signin',(done)=>{
         chai
       .request(app)
-      .get(`/api/v1/auth/token/${UserToken}`)
+      .post(`/api/v1/auth/token/${UserToken}`)
       .end((err, res) => {
         UserToken = res.body.data.token;
         expect(res.statusCode).to.equal(200);
@@ -90,7 +93,7 @@ describe('>>> Testing Route (User Auth) <<<',()=>{
     it('User Token Damaged',(done)=>{
         chai
       .request(app)
-      .get(`/api/v1/auth/token/kjhjkh`)
+      .post(`/api/v1/auth/token/kjhjkh`)
       .end((err, res) => {
         expect(res.statusCode).to.equal(401);
         done();
@@ -175,5 +178,4 @@ describe('>>> Testing Route (User Auth) <<<',()=>{
         done();
       });
     })
-
 })

@@ -8,10 +8,13 @@ export default class User {
 
     static async SocialAuth(req,res){
         let status,message,data;
-        const { firstname,lastname,email,isVerified,googleId,facebookId } = req.body;
+        const { email,isVerified,googleId,facebookId } = req.body;
         const userByEmail = await userService.findByEmail({ email })
+        let firstname,lastname;
 
         if(!userByEmail){
+            firstname = req.body.firstname
+            lastname = req.body.lastname;
             const newUser = {
                 firstname,
                 lastname,
@@ -38,6 +41,8 @@ export default class User {
                 email,
                 role: userByEmail.dataValues.role,
             }
+            firstname = userByEmail.dataValues.firstname
+            lastname = userByEmail.dataValues.lastname;
         }
 
         const token = jwt.sign(data,process.env.JWT_KEY,{ expiresIn: '7d' });
@@ -55,5 +60,4 @@ export default class User {
         util.setSuccess(200, "User's role updated successfully");
         return util.send(res);
     }
-
 }
