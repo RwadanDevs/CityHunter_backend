@@ -40,3 +40,10 @@ export const BusUpdateValidateSchema = Joi.object({
     destination: Joi.string().pattern(/^[a-zA-Z0-9 *]{3,25}$/).required(),
     status: Joi.string(),
     });
+
+export const locationValidateSchema = Joi.object({
+    originLat: Joi.number().required(),
+    originLong: Joi.number().required(),
+    destinationLat: Joi.number().required(),
+    destinationLong: Joi.number().required(),
+    });

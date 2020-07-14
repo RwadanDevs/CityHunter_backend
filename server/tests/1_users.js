@@ -21,6 +21,21 @@ const User = [
     },
   ]
 
+const locations = [
+  {
+    originLat:-1.975803,
+    originLong:30.072502,
+    destinationLat:-1.949695,
+    destinationLong:30.1006848,
+  },
+  {
+    originat:-1.975803,
+    originLong:30.072502,
+    destinationLat:-1.949695,
+    destinationLong:30.1006848
+  }
+]
+
 describe('>>> Testing Route (User Auth) <<<',()=>{
   let AdminToken,UserToken
     it('Welcome Route',(done)=>{
@@ -42,6 +57,28 @@ describe('>>> Testing Route (User Auth) <<<',()=>{
         expect(res.statusCode).to.equal(404);
         done();
       });
+    })
+
+    it('location validation error (SERVER ERROR)',(done)=>{
+      chai
+      .request(app)
+      .post('/api/v1/locations')
+      .send([locations[1]])
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(400);
+        done();
+      });
+    })
+
+    it('location Fetch Success',(done) => {
+      chai
+      .request(app)
+      .post('/api/v1/locations')
+      .send(locations[0])
+      .end((err, res) => {
+        expect(res.statusCode).to.equal(200);
+      });
+      done();
     })
 
     it('user created successful',(done)=>{

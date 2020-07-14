@@ -9,7 +9,7 @@ import { io } from './helpers/sockets';
 const util = new Util();
 const app = express();
 
-app.use(express.static(path.join(__dirname,'./public')))
+app.use(express.static(path.join(__dirname,'../public')))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

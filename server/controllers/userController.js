@@ -1,3 +1,4 @@
+import fetch from 'node-fetch';
 import jwt from 'jsonwebtoken';
 import Util from '../helpers/util';
 import userService from '../services/userService';
@@ -59,5 +60,26 @@ export default class User {
         
         util.setSuccess(200, "User's role updated successfully");
         return util.send(res);
+    }
+
+    static async locations (req,res){
+        
+        const { 
+
+            originLat,
+            originLong,
+            destinationLat,
+            destinationLong, 
+            
+        } = req.body;
+        
+        const response = await fetch(`https://maps.googleapis.com/maps/api/directions/json?origin=${originLat},${originLong}&destination=${destinationLat},${destinationLong}&key=${process.env.GOOGLE_API_KEY}`)
+        
+        const result = await response.json()
+
+        const data = result.routes[0].legs
+
+        util.setSuccess(200,'fetch Success',data[0])
+        return util.send(res)
     }
 }
