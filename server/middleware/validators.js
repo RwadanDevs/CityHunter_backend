@@ -11,6 +11,7 @@ import {
   BusValidateSchema,
   BusUpdateValidateSchema,
   GetBusValidateSchema,
+  locationValidateSchema,
 } from '../helpers/validationSchema';
 
 const util = new Util();
@@ -195,5 +196,11 @@ export default class validators {
 
       return next();
     }
-}
 
+    static async LocattionsValidations(req,res,next){
+      handler(req,res,locationValidateSchema)
+
+      return next();
+    }
+
+}

@@ -19,4 +19,6 @@ route.patch(
         userController.updateUser,
     )
 
+route.post('/locations', validator.LocattionsValidations, userController.locations)
+
 export default route;

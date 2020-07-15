@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Track 📍 Bus</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./viewer.js"></script>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .container{
+        width:80%;
+        height: 100vh;
+        margin: 0 auto;
+        background: lightblue;
+      }
+      .input-field{
+        margin: 0 auto;
+        padding: 20px;
+        width:40%;
+        color: lightslategray;
+      }
+      .input-field input{
+        border:none;
+        border-radius: 30px;
+        padding: 10px;
+        font-family: monospace;
+        outline: none;
+      }
+      button{
+        padding: 15px;
+        position: relative;
+        left: 45%;
+        border: none;
+        border-radius: 50px;
+        width: 20%;
+        color: #333;
+        background: transparent;
+        border: 1px solid gray;
+        cursor: pointer;
+        outline: none;
+      }
+      button:hover{
+        background: transparent;
+        color: white;
+        border: 1px solid white;
+        transition: 0.5s;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container" >
+      <div class="input-field">
+        <p id="demo">My is </p>
+        <span>Auth Type:</span>
+        <input type="text" placeholder="User/Driver"/>
+        <p id="busses">number of busses: </p>
+        <p id="error"></p>
+        <p id="time"></p>
+      </div>
+      <button onclick="init()">SEND</button>
+    </div>
+  </body>
+</html>
